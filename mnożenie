@@ -1,0 +1,131 @@
+# kalkulator 
+.data 
+welcome:.asciiz"\n\n Select what would you like to do: \n"
+select:.asciiz"1. Multiplication\n2. Addition\n\n"
+licz1: .asciiz "Podaj 1 liczbe: "
+licz2: .asciiz "Podaj 2 liczbe: "
+licz3: .asciiz "Podaj 3 liczbe: "
+result: .asciiz "Wynik to: "
+
+.text
+
+main:
+	
+	li $v0, 4
+	la $a0,welcome
+	syscall	#print message for user
+	
+	li $v0, 4
+	la $a0,select
+	syscall	#print list of operations
+	
+	li $v0,5
+	syscall
+	move $s2,$v0	#recieve user choice
+	
+	
+main_loop:	
+		beq $s2,9,break	#if user choice = 9 , branch to exit
+		beq $s2,1,mnozenie	#if not 1 branch
+		beq $s2,2,dodawanie
+
+mnozenie:
+
+la $a0, licz1	# zaladuj do rejestru s0 wartosc z adresu licz1
+li $v0, 4 	# wywolanie funkcji z parametrem 4 
+syscall 
+
+# wczytanie 1 liczby 
+ li $v0, 5 	# wywolanie funkcji z 5 (read int - sys call)
+ syscall 
+ move $t0, $v0
+ 
+ la $a0, licz2	# zaladuj do rejestru wartosc z pod adresu licz2
+ li $v0, 4 	# wywolanie funkcji z arg 4 print string 
+ syscall
+ 
+ # wczytywanie 2 liczby 
+ li $v0, 5	
+ syscall
+ move $t1, $v0 # move from v0 to t1
+ 
+ la $a0, licz3	# zaladuj do rejestru wartosc z pod adresu licz2
+ li $v0, 4 	# wywolanie funkcji z arg 4 print string 
+ syscall
+ 
+ # wczytywanie 3 liczby 
+ li $v0, 5	
+ syscall
+ move $t2, $v0 # move from v0 to t1
+
+  # mnozenie 
+ mult $t0, $t1
+ mflo  $s0
+ move $t9, $s0
+ 
+ mult $t2, $t9
+ mflo $s0
+  
+ #
+ la $a0, result # ladowanie do rejestru a0 
+ li $v0, 4
+ syscall 
+ 
+ li $v0, 1 
+ move $a0, $s0
+ syscall
+ 
+ li $v0, 10
+ syscall 
+ 
+ 
+ 
+ dodawanie:
+ 
+la $a0, licz1	# zaladuj do rejestru s0 wartosc z adresu licz1
+li $v0, 4 	# wywolanie funkcji z parametrem 4 
+syscall 
+
+# wczytanie 1 liczby 
+ li $v0, 5 	# wywolanie funkcji z 5 (read int - sys call)
+ syscall 
+ move $t0, $v0
+ 
+ la $a0, licz2	# zaladuj do rejestru wartosc z pod adresu licz2
+ li $v0, 4 	# wywolanie funkcji z arg 4 print string 
+ syscall
+ 
+ # wczytywanie 2 liczby 
+ li $v0, 5	
+ syscall
+ move $t1, $v0 # move from v0 to t1
+ 
+ la $a0, licz3	# zaladuj do rejestru wartosc z pod adresu licz2
+ li $v0, 4 	# wywolanie funkcji z arg 4 print string 
+ syscall
+ 
+ # wczytywanie 3 liczby 
+ li $v0, 5	
+ syscall
+ move $t2, $v0 # move from v0 to t1
+
+  # dodawanie 
+ add  $t9, $t1, $t2
+ add $t9, $t9, $t3
+  
+ #
+ la $a0, result # ladowanie do rejestru a0 
+ li $v0, 4
+ syscall 
+ 
+ li $v0, 1 
+ move $a0, $t9
+ syscall
+ 
+ li $v0, 10
+ syscall 
+
+ 
+ break:
+ li $v0, 10
+ syscall 
